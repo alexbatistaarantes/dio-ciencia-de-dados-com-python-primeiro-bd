@@ -72,12 +72,32 @@ CREATE TABLE estoque_produto(
 DROP TABLE IF EXISTS cliente;
 CREATE TABLE cliente(
 	id INT NOT NULL AUTO_INCREMENT,
-	nome VARCHAR(100) NOT NULL,
-	cpf CHAR(11) NOT NULL UNIQUE,
+	pessoa ENUM('PF', 'PJ') DEFAULT 'PF',
 	endereco VARCHAR(100),
-	data_de_nascimento DATE NOT NULL,
 	
 	PRIMARY KEY(id)
+);
+
+-- Cliente pessoa física
+DROP TABLE IF EXISTS pessoa_fisica;
+CREATE TABLE pessoa_fisica(
+	id_cliente INT NOT NULL,
+	nome VARCHAR(100) NOT NULL,
+	cpf CHAR(11) NOT NULL UNIQUE,
+	data_de_nascimento DATE NOT NULL,
+	
+	FOREIGN KEY(id_cliente) REFERENCES cliente(id) ON DELETE CASCADE
+);
+
+-- Cliente pessoa jurídica
+DROP TABLE IF EXISTS pessoa_juridica;
+CREATE TABLE pessoa_juridica(
+	id_cliente INT NOT NULL,
+	razao_social VARCHAR(100) NOT NULL,
+	cnpj CHAR(14) NOT NULL UNIQUE,
+	data_de_abertura DATE NOT NULL,
+	
+	FOREIGN KEY(id_cliente) REFERENCES cliente(id) ON DELETE CASCADE
 );
 
 -- Pedido
