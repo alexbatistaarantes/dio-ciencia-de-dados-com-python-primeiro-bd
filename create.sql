@@ -123,3 +123,28 @@ CREATE TABLE produto_pedido(
 );
 
 -- ----------------------------------------------------------------------
+-- VIEWS
+
+-- Cliente com dados completo
+CREATE VIEW cliente_completo AS
+SELECT
+	c.id AS id,
+	c.pessoa AS pessoa,
+	c.endereco AS endereco,
+	CASE
+		WHEN c.pessoa = 'PF' THEN pf.nome
+		WHEN c.pessoa = 'PJ' THEN pj.razao_social
+	END AS nome,
+	CASE
+		WHEN c.pessoa = 'PF' THEN pf.cpf
+		WHEN c.pessoa = 'PJ' THEN pj.cnpj
+	END AS cadastro,
+	CASE
+		WHEN c.pessoa = 'PF' THEN pf.data_de_nascimento
+		WHEN c.pessoa = 'PJ' THEN pj.data_de_abertura
+	END AS nascimento
+FROM cliente c
+LEFT JOIN pessoa_fisica pf ON pf.id_cliente = c.id
+LEFT JOIN pessoa_juridica pj ON pj.id_cliente = c.id;
+
+
